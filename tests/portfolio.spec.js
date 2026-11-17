@@ -212,7 +212,7 @@ test("content and controls remain usable when WebGL is unavailable", async ({
 test("a failed engine module leaves useful fallback controls", async ({
   page,
 }) => {
-  await page.route("**/src/scene.js", (route) => route.abort());
+  await page.route("**/src/scene.js*", (route) => route.abort());
   await page.goto("/");
   await expect(page.locator("#reset-scene")).toBeDisabled();
   await expect(page.locator("#hero-scene")).not.toHaveAttribute("tabindex");
