@@ -166,7 +166,7 @@ function createHero(container) {
       rotation: [1.03, 0.14, -0.2],
       material: chrome,
     },
-    { radius: 1.3, tube: 0.28, rotation: [0.25, 1.18, 0.2], material: orange },
+    { radius: 1.3, tube: 0.28, rotation: [0.25, 0.95, 0.2], material: orange },
     {
       radius: 1.97,
       tube: 0.09,
