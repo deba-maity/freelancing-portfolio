@@ -1,4 +1,8 @@
 /* Small material and interaction details shared across the composition. */
+.contact-section a:focus-visible,
+.contact-section button:focus-visible {
+  outline-color: #344625;
+}
 .hero-actions {
   display: flex;
   align-items: center;
