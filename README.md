@@ -60,7 +60,16 @@ The project images are purpose-built interface concepts, labeled as such. Live a
 
 Vite, JavaScript, CSS, and Three.js. No backend, database, accounts, or external runtime APIs are required. Fonts and all visual assets are bundled locally. Three.js loads separately from the primary page code.
 
-`.openai/hosting.json` holds the Sites project identity and static output configuration. Keep the existing project ID when publishing updates. A new Sites deployment is private by default; public access requires a separate audience change.
+The live portfolio is public at [debajyoti-maity-dimension.stonymoth6.chatgpt.site](https://debajyoti-maity-dimension.stonymoth6.chatgpt.site).
+
+Source is maintained in [deba-maity/freelancing-portfolio](https://github.com/deba-maity/freelancing-portfolio):
+
+- `main` contains this 3D portfolio.
+- `legacy-portfolio` preserves the previous portfolio and its original commit.
+
+GitHub stores the source and history; Sites hosts the published portfolio. Pushing a commit to GitHub does not automatically update the live Sites deployment. Publish changes through Sites when they are ready to go live.
+
+`.openai/hosting.json` holds the existing Sites project identity and static output configuration. Keep the project ID when publishing updates so they use the same site.
 
 Font license notices are included in `public/fonts/`. The monogram font is a subset of the Helvetiker font bundled with Three.js and retains its original license metadata.
 
