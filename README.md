@@ -1,6 +1,6 @@
 # Debajyoti Maity — A World of Work
 
-A navigable architectural studio built in Three.js. The portfolio lives inside a continuous 3D environment: physical project exhibits, an extruded monogram, a career staircase, glass data towers, and a contact workbench. Scrolling moves the camera between six views; dragging orbits the entire space.
+A navigable architectural studio built in Three.js. The portfolio lives inside a continuous 3D environment with six clear areas: Studio, Personal Projects, Professional Work, Experience, Skills & Approach, and Contact. Scrolling moves the camera between them; dragging orbits the space. Every meaningful object opens its own story with one click.
 
 ## Start here
 
@@ -21,13 +21,17 @@ Open the Local URL printed by Vite, normally **http://localhost:5178**. On subse
 
 - Scroll, use the chapter navigation, or press Left/Right to travel between exhibits.
 - Drag to orbit. On phones, swipe vertically to travel or horizontally to look around.
-- Click an exhibit to approach it; click it again to open the project story.
+- Click a project screen to open its story immediately. The camera frames the exhibit beside a details panel.
+- Personal Projects groups Health Planner and Angular Features Showcase. Professional Work groups healthcare, enterprise dashboards, and cross-platform applications.
+- Click any of the four career steps for that role, or a skills drawer for its toolkit and related projects.
+- Click the contact desk for contact details, the book for the résumé, or the lamp to change the lighting.
+- Use the panel's Back control and collection links to move between related stories.
 - Pull apart the Angular exhibit's physical interface layers.
 - Switch between daylight and evening lighting.
 - Pause ambient movement, or use the operating system's reduced-motion preference.
 - Open Index for direct navigation, experience, skills, education, résumé, and contact information.
 
-The 3D scene is procedural geometry with live materials, shadows, lighting, and camera movement. The image poster is a fallback for unavailable WebGL. All project and contact information remains usable without the renderer. Scene rendering pauses when the document is hidden or a details dialog is open.
+The 3D scene is procedural geometry with live materials, shadows, lighting, and camera movement. Objects react to hover; skills drawers slide forward. The image poster is a fallback for unavailable WebGL. All content, project previews, and contact information remain usable without the renderer. Rendering pauses when the document is hidden; ambient animation pauses while a panel is open, while camera and deliberate lighting/layer changes remain available.
 
 ## Build and verify
 
@@ -45,16 +49,19 @@ The production output is `dist/`. Browser tests start the development server aut
 
 | File                                | Purpose                                                                 |
 | ----------------------------------- | ----------------------------------------------------------------------- |
-| `index.html`                        | Chapter copy, navigation, contact links, and metadata                   |
-| `src/studio.js`                     | Career and project content, navigation, dialogs, and controls           |
-| `src/studio-scene.js`               | Architecture, exhibits, lighting, camera paths, and rendering lifecycle |
+| `index.html`                        | Page shell, metadata, controls, and accessible dialog                   |
+| `src/portfolio-data.js`             | Collections, projects, roles, skills, and object metadata               |
+| `src/studio.js`                     | Semantic page content, panel navigation, and controls                   |
+| `src/studio-scene.js`               | Architecture, exhibits, geometry, and materials                         |
+| `src/studio-controller.js`          | Camera paths, object selection, hover feedback, and rendering lifecycle |
 | `src/exhibit-textures.js`           | Procedural interface studies and physical exhibit labels                |
 | `src/studio.css`                    | Responsive layout, typography, controls, and dialogs                    |
+| `src/collections.css`               | Grouped navigation, detail panels, and mobile refinements               |
 | `src/fonts.css`                     | Local font declarations                                                 |
 | `scripts/resume.html`               | Editable résumé source                                                  |
 | `public/Debajyoti-Maity-Resume.pdf` | Downloadable résumé                                                     |
 
-Run `npm run resume` after editing the résumé source. With the development server running, `npm run social` exports the actual rendered studio as the fallback poster and social preview. The generated assets are included in production builds.
+Run `npm run resume` after editing the résumé source. With the development server running, `npm run social` exports the actual rendered studio as the fallback poster and social preview, plus static project previews in `public/exhibits/`. The generated assets are included in production builds.
 
 The exhibit screens are illustrative interface studies, identified in the project details. Live links open the original applications. Professional project descriptions use the supplied résumé; no internal screens, patient data, or proprietary client code are included.
 
@@ -64,7 +71,8 @@ Live: [debajyoti-maity-dimension.stonymoth6.chatgpt.site](https://debajyoti-mait
 
 Source: [deba-maity/freelancing-portfolio](https://github.com/deba-maity/freelancing-portfolio)
 
-- `main`: the architectural studio.
+- `main`: the amplified architectural studio with direct object interaction and grouped content.
+- `studio-v1`: the first architectural studio, preserved before the collection redesign.
 - `first-3d-portfolio`: the earlier orbital-sculpture design.
 - `legacy-portfolio`: the original portfolio.
 

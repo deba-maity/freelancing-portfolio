@@ -121,196 +121,21 @@
       <span class="status-dot"></span
       ><span id="scene-status-text">Opening the studio…</span>
     </div>
-    <div id="hotspots" role="group" aria-label="Explore the studio exhibits">
-      <button class="hotspot" data-stop="1">
-        <span class="hotspot-dot">01</span
-        ><span class="hotspot-label">Health Planner <b>↗</b></span>
-      </button>
-      <button class="hotspot" data-stop="2">
-        <span class="hotspot-dot">02</span
-        ><span class="hotspot-label">Angular Lab <b>↗</b></span>
-      </button>
-      <button class="hotspot" data-stop="3">
-        <span class="hotspot-dot">03</span
-        ><span class="hotspot-label">Systems at scale <b>↗</b></span>
-      </button>
+    <div
+      id="hotspots"
+      role="group"
+      aria-label="Objects and collections in the studio"
+    ></div>
+    <div id="object-tooltip" aria-hidden="true">
+      <span class="tooltip-category"></span
+      ><strong class="tooltip-name"></strong
+      ><span class="tooltip-action"></span>
     </div>
     <main id="chapter-content" tabindex="-1">
-      <section
-        id="studio"
-        class="chapter is-active"
-        data-chapter="0"
-        aria-labelledby="title-studio"
-      >
+      <section id="studio" class="chapter is-active">
         <div class="chapter-copy">
-          <p class="eyebrow">
-            <span class="small-cross">✳</span> WELCOME TO MY LITTLE UNIVERSE
-          </p>
-          <h1 id="title-studio">
-            A world<br />
-            of <em>work.</em>
-          </h1>
-          <p class="chapter-description">
-            I'm Debajyoti. I build the interfaces<br />
-            you see. And the systems you don't.
-          </p>
-          <button class="text-link" data-stop="1">
-            Step inside <span class="round-arrow" aria-hidden="true">↗</span>
-          </button>
-          <div class="hero-footnote">
-            <span>4.5+ YEARS BUILDING</span><span>ANGULAR · REACT · IONIC</span>
-          </div>
-        </div>
-      </section>
-      <section
-        id="health"
-        class="chapter"
-        data-chapter="1"
-        aria-labelledby="title-health"
-      >
-        <div class="chapter-copy">
-          <p class="eyebrow">
-            <span class="chapter-number">01</span> PERSONAL PROJECT / ANGULAR
-          </p>
-          <h2 id="title-health">
-            Small steps.<br />
-            <em>Better days.</em>
-          </h2>
-          <p class="chapter-description">
-            Health Planner turns goals, food, and fitness into a daily picture
-            of progress.
-          </p>
-          <button class="text-link" data-project="health">
-            Explore the project
-            <span class="round-arrow" aria-hidden="true">↗</span>
-          </button>
-          <div class="spec-strip">
-            <span>GOAL SETTING</span><span>DASHBOARDS</span
-            ><span>TRACKING</span>
-          </div>
-        </div>
-      </section>
-      <section
-        id="angular"
-        class="chapter"
-        data-chapter="2"
-        aria-labelledby="title-angular"
-      >
-        <div class="chapter-copy">
-          <p class="eyebrow">
-            <span class="chapter-number">02</span> PERSONAL PROJECT / ANGULAR 17
-          </p>
-          <h2 id="title-angular">
-            Take it<br />
-            <em>apart.</em>
-          </h2>
-          <p class="chapter-description">
-            A playground for the moving parts of Angular. Routes, forms,
-            services, and components—made tangible.
-          </p>
-          <button class="text-link" data-project="angular">
-            Open the lab notes
-            <span class="round-arrow" aria-hidden="true">↗</span>
-          </button>
-          <div class="spec-strip">
-            <span>REACTIVE FORMS</span><span>DYNAMIC UI</span>
-          </div>
-        </div>
-      </section>
-      <section
-        id="systems"
-        class="chapter"
-        data-chapter="3"
-        aria-labelledby="title-systems"
-      >
-        <div class="chapter-copy">
-          <p class="eyebrow">
-            <span class="chapter-number">03</span> PROFESSIONAL WORK / PUBLIC
-            HEALTH
-          </p>
-          <h2 id="title-systems">
-            Clarity.<br />
-            <em>At scale.</em>
-          </h2>
-          <p class="chapter-description">
-            Turning complex diagnostic datasets into a structured platform for
-            UK public health.
-          </p>
-          <button class="text-link" data-project="healthcare">
-            Inside the architecture
-            <span class="round-arrow" aria-hidden="true">↗</span>
-          </button>
-          <div class="metric-strip">
-            <span><b>4</b>DEVELOPERS MENTORED</span
-            ><span><b>2 weeks</b>CORE FEATURE DELIVERY</span>
-          </div>
-        </div>
-      </section>
-      <section
-        id="journey"
-        class="chapter"
-        data-chapter="4"
-        aria-labelledby="title-journey"
-      >
-        <div class="chapter-copy">
-          <p class="eyebrow">
-            <span class="chapter-number">04</span> THE EXPERIENCE BEHIND THE
-            WORK
-          </p>
-          <h2 id="title-journey">
-            Built up.<br />
-            <em>Step by step.</em>
-          </h2>
-          <p class="chapter-description">
-            From enterprise interfaces to mobile apps and public-sector
-            platforms. Every role adds another layer.
-          </p>
-          <button class="text-link" data-open-profile>
-            Follow the journey
-            <span class="round-arrow" aria-hidden="true">↗</span>
-          </button>
-          <div class="spec-strip">
-            <span>TCS → OTOBIT → RHYTHMFLOWS → VJL</span>
-          </div>
-        </div>
-      </section>
-      <section
-        id="contact"
-        class="chapter"
-        data-chapter="5"
-        aria-labelledby="title-contact"
-      >
-        <div class="chapter-copy">
-          <p class="eyebrow">
-            <span class="small-cross">✳</span> THE NEXT CHAPTER IS OPEN
-          </p>
-          <h2 id="title-contact">
-            Your idea.<br />
-            <em>Our next build.</em>
-          </h2>
-          <p class="chapter-description">
-            A thoughtful interface. A complex system.<br />
-            Something that doesn't exist yet.
-          </p>
-          <a class="text-link" href="mailto:debajyoti.maity29@gmail.com"
-            >Let's make it happen
-            <span class="round-arrow" aria-hidden="true">↗</span></a
-          >
-          <div class="contact-links">
-            <button id="copy-email">
-              Copy email <span aria-hidden="true">⧉</span></button
-            ><a
-              href="https://www.linkedin.com/in/debajyoti-maity-004920185/"
-              target="_blank"
-              rel="noopener"
-              >LinkedIn ↗</a
-            ><a
-              href="https://github.com/deba-maity"
-              target="_blank"
-              rel="noopener"
-              >GitHub ↗</a
-            >
-          </div>
+          <h1>A world of work.</h1>
+          <p>Debajyoti Maity — frontend-focused full-stack developer.</p>
         </div>
       </section>
     </main>
@@ -359,35 +184,37 @@
       </button>
     </div>
     <button id="exhibit-action" aria-pressed="false">
-      Pull the layers apart ↗
+      Separate Angular layers ↗
     </button>
     <footer class="tour-footer">
       <div class="tour-hint">
         <span class="mouse-mark" aria-hidden="true"></span
-        ><span
-          >SCROLL TO TRAVEL<br />
-          <b>DRAG TO LOOK AROUND</b></span
-        >
+        ><span>SCROLL TO EXPLORE<br /><b>DRAG TO LOOK AROUND</b></span>
       </div>
-      <nav class="tour-nav" aria-label="Portfolio chapters">
-        <button data-stop="0" aria-current="step">
-          <span>00</span><b>Studio</b></button
-        ><button data-stop="1"><span>01</span><b>Health</b></button
-        ><button data-stop="2"><span>02</span><b>Angular</b></button
-        ><button data-stop="3"><span>03</span><b>Systems</b></button
-        ><button data-stop="4"><span>04</span><b>Journey</b></button
-        ><button data-stop="5"><span>05</span><b>Contact</b></button
-        ><span class="nav-progress" aria-hidden="true"></span>
-      </nav>
+      <nav class="tour-nav" aria-label="Portfolio areas"></nav>
       <div class="chapter-counter">
         <span id="current-chapter">00</span><span class="counter-line"></span
         ><span>05</span>
       </div>
     </footer>
     <dialog id="portfolio-dialog" aria-labelledby="dialog-title">
-      <button id="close-dialog" class="close-dialog" aria-label="Close details">
-        ✕
-      </button>
+      <header class="panel-toolbar">
+        <button
+          id="dialog-back"
+          class="panel-back"
+          aria-label="Back to previous details"
+          hidden
+        >
+          ← Back</button
+        ><span id="panel-context">The studio</span
+        ><button
+          id="close-dialog"
+          class="close-dialog"
+          aria-label="Close details"
+        >
+          ✕
+        </button>
+      </header>
       <div id="dialog-body"></div>
     </dialog>
     <div id="toast" role="status"></div>

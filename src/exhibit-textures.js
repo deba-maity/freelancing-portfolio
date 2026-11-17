@@ -261,3 +261,149 @@ export function labelTexture(
   if (sub) text(c, sub, 47, height - 28, 20, color);
   return finish(el);
 }
+
+export function enterpriseTexture() {
+  const [el, c] = canvas();
+  rect(c, 0, 0, 1024, 640, "#f2f0f6");
+  rect(c, 0, 0, 190, 640, "#372d4a");
+  text(c, "workspace.", 24, 61, 25, "#f4eefb", 600);
+  ["Overview", "Reports", "Data sources", "Team chat"].forEach((s, i) => {
+    if (i === 0) rect(c, 14, 113 + i * 57, 162, 41, "#5d4e78", 7);
+    text(c, s, 29, 140 + i * 57, 15, "#d8cfe8");
+  });
+  text(c, "A clearer view of the business.", 226, 72, 30, "#372d4a", 600);
+  text(c, "ENTERPRISE REPORTING / INTERFACE STUDY", 228, 105, 11, "#7c6c8c");
+  ["REPORTING", "CONNECTED DATA", "LIVE COLLABORATION"].forEach((s, i) => {
+    rect(c, 226 + i * 255, 140, 235, 95, "#e6e0ed", 12);
+    text(c, s, 242 + i * 255, 174, 12, "#695878");
+    text(
+      c,
+      ["Overview", "In one place", "In real time"][i],
+      242 + i * 255,
+      209,
+      21,
+      "#372d4a",
+      500,
+    );
+  });
+  rect(c, 226, 262, 465, 304, "#fff", 13);
+  text(c, "Reporting overview", 249, 301, 22, "#372d4a", 500);
+  for (let i = 0; i < 4; i++)
+    line(
+      c,
+      [
+        [250, 345 + i * 54],
+        [665, 345 + i * 54],
+      ],
+      "#e6e0ed",
+      1,
+    );
+  [84, 125, 101, 168, 146, 186].forEach((h, i) =>
+    rect(c, 269 + i * 62, 531 - h, 31, h, i === 5 ? "#6b538c" : "#b4a4cb", 5),
+  );
+  rect(c, 713, 262, 279, 304, "#e4e9e0", 13);
+  text(c, "Team conversation", 735, 300, 19, "#344833", 500);
+  [
+    ["#fff", 733, 330, 210],
+    ["#c8d6bc", 766, 397, 205],
+    ["#fff", 733, 464, 210],
+  ].forEach(([col, x, y, w]) => {
+    rect(c, x, y, w, 50, col, 10);
+    rect(c, x + 15, y + 14, w - 44, 5, "#a1b196", 3);
+    rect(c, x + 15, y + 28, w - 77, 5, "#b9c7b0", 3);
+  });
+  text(
+    c,
+    "DASHBOARDS + DJANGO ORM + REDIS + WEBSOCKETS",
+    228,
+    610,
+    11,
+    "#7c6c8c",
+  );
+  return finish(el, "enterprise");
+}
+
+export function mobileTexture(phone = true) {
+  const [el, c] = canvas(phone ? 480 : 1024, phone ? 900 : 640);
+  rect(c, 0, 0, el.width, el.height, "#f6eee7");
+  if (phone) {
+    text(c, "your / workspace", 33, 76, 25, "#76482f", 600);
+    text(c, "Work, wherever.", 33, 156, 37, "#76482f", 600);
+    text(c, "A connected mobile experience.", 34, 191, 17, "#93725c");
+    rect(c, 27, 233, 426, 175, "#d7754b", 24);
+    text(c, "YOUR OVERVIEW", 52, 280, 15, "#fff3df");
+    text(c, "Everything", 52, 330, 35, "#fff3df", 500);
+    text(c, "in reach.", 52, 371, 35, "#fff3df", 500);
+    ["Dashboard", "Payments", "Account"].forEach((s, i) => {
+      rect(c, 27, 440 + i * 102, 426, 82, "#fff", 15);
+      rect(
+        c,
+        46,
+        461 + i * 102,
+        40,
+        40,
+        ["#d8bb9a", "#b6c7a2", "#b2bed5"][i],
+        11,
+      );
+      text(c, s, 109, 490 + i * 102, 23, "#76482f", 500);
+      text(c, "→", 404, 490 + i * 102, 23, "#76482f");
+    });
+    rect(c, 27, 790, 426, 60, "#e9ddd0", 18);
+    text(c, "HOME       EXPLORE       PROFILE", 63, 827, 14, "#76482f");
+    text(c, "ANGULAR + IONIC / INTERFACE STUDY", 34, 880, 11, "#93725c");
+  } else {
+    text(c, "Web. Mobile. Connected.", 48, 77, 40, "#76482f", 600);
+    text(
+      c,
+      "ANGULAR + IONIC / CROSS-PLATFORM INTERFACE STUDY",
+      50,
+      114,
+      12,
+      "#93725c",
+    );
+    rect(c, 45, 155, 610, 396, "#fff", 18);
+    rect(c, 45, 155, 610, 49, "#e3cbb3", 18);
+    text(c, "workspace / dashboard", 67, 187, 16, "#76482f");
+    ["Dashboard", "Payments", "Authentication"].forEach((s, i) => {
+      rect(
+        c,
+        67 + i * 190,
+        230,
+        170,
+        117,
+        ["#d7754b", "#bdcda8", "#c0cce0"][i],
+        12,
+      );
+      text(c, s, 82 + i * 190, 298, 18, i === 0 ? "#fff3df" : "#44513e", 500);
+    });
+    for (let i = 0; i < 4; i++) {
+      rect(c, 69, 379 + i * 34, 560, 19, "#efe7dc", 5);
+      rect(c, 462, 383 + i * 34, 147, 11, "#d8bb9a", 5);
+    }
+    rect(c, 707, 155, 252, 396, "#334336", 28);
+    rect(c, 720, 172, 226, 360, "#f6eee7", 20);
+    text(c, "your / workspace", 740, 216, 17, "#76482f", 500);
+    rect(c, 738, 242, 190, 105, "#d7754b", 14);
+    text(c, "In your pocket.", 752, 298, 20, "#fff3df", 500);
+    for (let i = 0; i < 3; i++) {
+      rect(c, 738, 367 + i * 44, 190, 32, "#e9ddd0", 9);
+      text(
+        c,
+        ["Dashboard", "Payments", "Profile"][i],
+        752,
+        389 + i * 44,
+        13,
+        "#76482f",
+      );
+    }
+    text(
+      c,
+      "RESPONSIVE INTERFACES / GESTURE-BASED INTERACTIONS / CONNECTED APIS",
+      50,
+      602,
+      11,
+      "#93725c",
+    );
+  }
+  return finish(el, phone ? null : "mobile");
+}

@@ -1,6 +1,7 @@
 import { chromium } from "@playwright/test";
-import { mkdir, copyFile } from "node:fs/promises";
+import { mkdir, copyFile, writeFile } from "node:fs/promises";
 await mkdir("qa", { recursive: true });
+await mkdir("qa/exhibits", { recursive: true });
 const browser = await chromium.launch({
   headless: true,
   args: ["--enable-unsafe-swiftshader"],
@@ -18,6 +19,15 @@ try {
     () => document.querySelector("#world").dataset.ready === "true",
     { timeout: 45000 },
   );
+  const images = await page.evaluate(() => window.__studio?.images);
+  if (!images)
+    throw new Error("Run this exporter against the development server.");
+  for (const [id, url] of Object.entries(images)) {
+    await writeFile(
+      "qa/exhibits/" + id + ".png",
+      Buffer.from(url.split(",")[1], "base64"),
+    );
+  }
   await page
     .locator("#world canvas")
     .screenshot({ path: "qa/studio-poster.jpg", type: "jpeg", quality: 88 });
@@ -40,6 +50,12 @@ for (const name of [
   "og-image.png",
 ])
   await copyFile("qa/" + name, "public/" + name);
+await mkdir("public/exhibits", { recursive: true });
+for (const id of ["health", "angular", "healthcare", "enterprise", "mobile"])
+  await copyFile(
+    "qa/exhibits/" + id + ".png",
+    "public/exhibits/" + id + ".png",
+  );
 console.log(
   "Exported the real studio render as desktop/mobile fallback posters and the social preview.",
 );

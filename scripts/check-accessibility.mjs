@@ -38,18 +38,31 @@ try {
   }
   await audit("studio");
   await page.locator('.tour-nav [data-stop="1"]').click();
-  await page.locator('[data-project="health"]').click();
+  await page.locator('#personal [data-open="personal"]').click();
+  await audit("personal-collection");
+  await page.locator('#dialog-body [data-open="health"]').click();
   await audit("project");
   await page.locator("#close-dialog").click();
   await page.locator("#index-button").click();
   await audit("index");
-  await page.locator("#dialog-body [data-open-profile]").click();
-  await audit("profile");
+  await page.locator('#dialog-body [data-open="experience"]').click();
+  await audit("experience-collection");
+  await page.locator('#dialog-body [data-open="role:vjl"]').click();
+  await audit("role");
+  await page.locator("#close-dialog").click();
+  await page.locator('.tour-nav [data-stop="4"]').click();
+  await page.locator('#skills [data-open="skill:frontend"]').click();
+  await audit("skill");
+  await page.screenshot({path:"qa/screens/final-audited-panel.png"});
   await page.locator("#close-dialog").click();
   await page.locator("#lighting-toggle").click();
+  await page.waitForTimeout(900);
   await audit("evening");
   await page.setViewportSize({ width: 390, height: 844 });
   await audit("mobile-evening");
+  await page.locator('.tour-nav [data-stop="5"]').click();
+  await page.locator('#contact [data-open="contact"]').click();
+  await audit("mobile-contact");
   await writeFile(
     "qa/accessibility-report.json",
     JSON.stringify(reports, null, 2),

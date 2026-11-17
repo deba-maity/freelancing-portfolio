@@ -5,22 +5,29 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
 import { FontLoader } from "three/addons/loaders/FontLoader.js";
 import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
 import fontData from "./monogram-font.json";
+import { connectStudio } from "./studio-controller.js";
 import {
   healthTexture,
   angularTexture,
   systemsTexture,
+  enterpriseTexture,
+  mobileTexture,
   labelTexture,
   exhibitImages,
 } from "./exhibit-textures.js";
 
 const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
-const clamp = THREE.MathUtils.clamp;
-const smooth = (t) => t * t * (3 - 2 * t);
-const TAU = Math.PI * 2;
 
 export async function createStudio(
   container,
-  { onNavigate, onOrbit, onReady, onFailure, reducedMotion = false } = {},
+  {
+    onSelect,
+    onHover,
+    onOrbit,
+    onReady,
+    onFailure,
+    reducedMotion = false,
+  } = {},
 ) {
   await document.fonts.ready;
   const mobile = () => innerWidth <= 700;
@@ -147,15 +154,21 @@ export async function createStudio(
     roughness: 0.5,
   });
   const geoCache = new Map(),
-    animations = [],
-    interactive = [];
-  function group(parent, x = 0, y = 0, z = 0, stop) {
+    animations = [];
+  const itemRoots = new Map(),
+    itemAnchors = new Map();
+  function register(object, id, anchor) {
+    object.userData.item = id;
+    if (!itemRoots.has(id)) itemRoots.set(id, object);
+    if (anchor) itemAnchors.set(id, { object, point: V(...anchor) });
+    return object;
+  }
+  function group(parent, x = 0, y = 0, z = 0, item) {
     const g = new THREE.Group();
     g.position.set(x, y, z);
     parent.add(g);
-    if (stop !== undefined) {
-      g.userData.stop = stop;
-      interactive.push(g);
+    if (item !== undefined) {
+      register(g, item);
     }
     return g;
   }
@@ -420,7 +433,7 @@ export async function createStudio(
     ).rotation.x = Math.PI / 4;
   }
   // Monument, inset into three low offset terraces.
-  const monument = group(studio, -0.9, 0, 1.6, 0);
+  const monument = group(studio, -0.3, 0, -0.8, "about");
   box(monument, 7, 0.2, 4.4, stone, 0, 0.1, 0, 0.12);
   box(monument, 6.5, 0.23, 4, chalk, 0, 0.3, -0.2, 0.1);
   box(monument, 6, 0.22, 3.55, chalk, 0, 0.52, -0.4, 0.08);
@@ -458,7 +471,21 @@ export async function createStudio(
     ball.rotation.y = t * 0.1;
   });
   // Health: a laptop, oversized handset, tactile goal bars and physical dial.
-  const health = group(studio, -8, 0, 1.6, 1);
+  const personalZone = group(studio, -7.1, 0, 3.45, "personal");
+  box(personalZone, 10.1, 0.065, 6.1, mint, 0, 0.04, 0, 0.2);
+  plaque(
+    personalZone,
+    "01 / PERSONAL PROJECTS",
+    "INDEPENDENT IDEAS. WORKING APPLICATIONS.",
+    0,
+    0.11,
+    3.06,
+    5.1,
+    0.38,
+    "#d6e2c2",
+  );
+  const health = group(studio, -9.2, 0.08, 3.1, "health");
+  health.scale.setScalar(0.76);
   health.rotation.y = 0.12;
   cylinder(health, 3.05, 3.05, 0.3, mint, 0, 0.17, 0);
   cylinder(health, 2.95, 2.95, 0.08, sage, 0, 0.36, 0);
@@ -514,7 +541,8 @@ export async function createStudio(
   );
   plant(health, -2.3, 0.43, 0.8, 0.52);
   // Angular: exploded physical interface layers hovering above a cobalt desk.
-  const angular = group(studio, 8, 0, 1.4, 2);
+  const angular = group(studio, -4.5, 0.08, 3.55, "angular");
+  angular.scale.setScalar(0.7);
   angular.rotation.y = -0.18;
   box(angular, 6.1, 0.25, 5.7, blue, 0, 0.14, 0, 0.2);
   box(angular, 4.6, 0.2, 2.8, chalk, 0, 1.15, 0.2, 0.12);
@@ -571,7 +599,8 @@ export async function createStudio(
     0.04,
   );
   // Public-sector systems: glass towers reveal the layers inside.
-  const systems = group(studio, 7.6, 0, -5.6, 3);
+  const systems = group(studio, 8.4, 0, -5.2, "healthcare");
+  systems.scale.setScalar(0.8);
   box(systems, 7, 0.25, 4.6, stone, 0, 0.13, 0, 0.15);
   const towerHeights = [2.45, 3.65, 4.5];
   towerHeights.forEach((h, i) => {
@@ -652,7 +681,7 @@ export async function createStudio(
   );
   plaque(
     systems,
-    "03 / SYSTEMS",
+    "PUBLIC HEALTH",
     "COMPLEXITY, GIVEN STRUCTURE.",
     0,
     0.14,
@@ -661,8 +690,131 @@ export async function createStudio(
     0.4,
     "#c8cbb9",
   );
+  const workZone = group(studio, 9.05, 0, -1.7, "professional");
+  box(workZone, 7.4, 0.06, 12.15, stone, 0, 0.035, 0, 0.18);
+  plaque(
+    workZone,
+    "02 / PROFESSIONAL WORK",
+    "PUBLIC HEALTH / ENTERPRISE / WEB + MOBILE",
+    0,
+    0.1,
+    6.09,
+    5.5,
+    0.38,
+    "#c8cbb9",
+  );
+  const purple = material("purple", "#806b9f", 0.55);
+  const enterprise = group(studio, 7.8, 0.08, -0.15, "enterprise");
+  box(enterprise, 4.8, 0.16, 2.7, chalk, 0, 1.05, 0, 0.12);
+  box(enterprise, 0.16, 1, 2.1, purple, -1.85, 0.5, 0, 0.04);
+  box(enterprise, 0.16, 1, 2.1, purple, 1.85, 0.5, 0, 0.04);
+  monitor(enterprise, enterpriseTexture(), 0, 1.14, -0.5, 3.5, 2.18);
+  keyboard(enterprise, -0.25, 1.18, 0.8, 2.45, chalk);
+  sphere(enterprise, 0.13, purple, 1.48, 1.22, 0.8);
+  plaque(
+    enterprise,
+    "ENTERPRISE & REPORTING",
+    "DASHBOARDS / APIS / REAL-TIME",
+    0,
+    0.82,
+    1.36,
+    3.1,
+    0.35,
+  );
+  const mobileWork = group(studio, 10.25, 0.08, 3, "mobile");
+  mobileWork.scale.setScalar(0.8);
+  mobileWork.rotation.y = -0.12;
+  box(mobileWork, 4.4, 0.25, 3.2, orange, 0, 0.15, 0, 0.2);
+  const mobilePhone = group(mobileWork, 1, 0.29, -0.38);
+  mobilePhone.rotation.z = -0.1;
+  box(mobilePhone, 1.52, 2.95, 0.17, dark, 0, 1.5, 0, 0.15);
+  face(mobilePhone, mobileTexture(true), 1.36, 2.7, 0, 1.5, 0.093);
+  box(mobilePhone, 0.37, 0.045, 0.02, dark, 0, 2.8, 0.11, 0.02);
+  const tablet = monitor(
+    mobileWork,
+    mobileTexture(false),
+    -0.88,
+    0.3,
+    0.35,
+    2.05,
+    1.28,
+  );
+  tablet.rotation.y = 0.18;
+  plaque(
+    mobileWork,
+    "WEB + MOBILE",
+    "ANGULAR / IONIC / CONNECTED APIS",
+    0,
+    0.16,
+    1.61,
+    3.2,
+    0.38,
+    "#ee6029",
+  );
+
+  const cabinet = group(studio, 2.2, 0, -5.45, "skills");
+  box(cabinet, 4.8, 0.18, 2.7, dark, 0, 0.1, 0, 0.1);
+  box(cabinet, 4.55, 4.5, 2.15, chalk, 0, 2.4, 0, 0.13);
+  const skillDrawers = [];
+  [
+    ["frontend", blue, "FRONTEND", "ANGULAR / REACT / IONIC", 3.58],
+    ["backend", orange, "BACKEND", "JAVA / PYTHON / CONNECTED APIS", 2.21],
+    ["practice", mint, "CRAFT", "TESTING / PERFORMANCE / LEADERSHIP", 0.84],
+  ].forEach(([id, mat, title, sub, y]) => {
+    const drawer = group(cabinet, 0, y, 0.28, "skill:" + id);
+    drawer.userData.slide = true;
+    box(drawer, 4.25, 1.13, 1.95, mat, 0, 0, 0, 0.07);
+    face(
+      drawer,
+      labelTexture([title], {
+        width: 1024,
+        height: 330,
+        size: 115,
+        sub,
+        bg:
+          id === "frontend"
+            ? "#3659cb"
+            : id === "backend"
+              ? "#ee6029"
+              : "#d6e2c2",
+        color: id === "frontend" ? "#f4f1e7" : "#29392f",
+      }),
+      3.72,
+      0.93,
+      0,
+      0,
+      0.985,
+    );
+    box(drawer, 0.75, 0.06, 0.09, metal, 1.2, -0.32, 1.04, 0.025);
+    register(drawer, "skill:" + id, [0, 0.1, 1.03]);
+    skillDrawers.push(drawer);
+  });
+  plaque(
+    cabinet,
+    "04 / SKILLS",
+    "THE TOOLS. THE THINKING.",
+    0,
+    4.4,
+    1.085,
+    3.8,
+    0.36,
+  );
+  for (let i = 0; i < 3; i++) {
+    const block = box(
+      cabinet,
+      0.45,
+      0.5,
+      0.45,
+      [blue, orange, sage][i],
+      -1 + i * 0.75,
+      4.9,
+      0,
+      0.08,
+    );
+    block.rotation.y = i * 0.3;
+  }
   // Career: four climbable-looking volumes, each carrying a real role.
-  const journey = group(studio, -6.4, 0, -5.7, 4);
+  const journey = group(studio, -6.4, 0, -5.7, "experience");
   const career = [
     ["TCS", "2021—2022", 0.8],
     ["OTOBIT", "2023—2024", 1.45],
@@ -671,9 +823,17 @@ export async function createStudio(
   ];
   career.forEach(([name, years, h], i) => {
     const x = -3.2 + i * 2.05;
-    box(journey, 1.95, h, 2.55, i === 3 ? orange : chalk, x, h / 2, 0, 0.055);
-    face(
+    const step = group(
       journey,
+      0,
+      0,
+      0,
+      "role:" + ["tcs", "otobit", "rhythmflows", "vjl"][i],
+    );
+    register(step, step.userData.item, [x, h - 0.35, 1.3]);
+    box(step, 1.95, h, 2.55, i === 3 ? orange : chalk, x, h / 2, 0, 0.055);
+    face(
+      step,
       labelTexture([name], {
         width: 768,
         height: 256,
@@ -688,20 +848,10 @@ export async function createStudio(
       h - 0.39,
       1.285,
     );
-    box(
-      journey,
-      1.97,
-      0.035,
-      2.57,
-      i === 3 ? gold : sage,
-      x,
-      h + 0.02,
-      0,
-      0.01,
-    );
+    box(step, 1.97, 0.035, 2.57, i === 3 ? gold : sage, x, h + 0.02, 0, 0.01);
     for (let j = 0; j < 2; j++)
       box(
-        journey,
+        step,
         0.48,
         0.18,
         0.55,
@@ -726,7 +876,7 @@ export async function createStudio(
   );
   plaque(
     journey,
-    "04 / THE JOURNEY",
+    "03 / EXPERIENCE",
     "4.5+ YEARS OF BUILDING",
     -0.2,
     0.15,
@@ -735,7 +885,7 @@ export async function createStudio(
     0.35,
   );
   // Contact desk: a warm pool of light, a blank page, and an invitation.
-  const contact = group(studio, 6.2, 0, 6.65, 5);
+  const contact = group(studio, 6.2, 0, 6.65, "contact");
   contact.rotation.y = -0.12;
   box(contact, 5.8, 0.16, 2.7, chalk, 0, 1.2, 0, 0.17);
   box(contact, 0.2, 1.12, 2.1, orange, -2.2, 0.57, 0, 0.07);
@@ -776,6 +926,7 @@ export async function createStudio(
   cylinder(contact, 0.43, 0.43, 0.08, dark, -1.8, 1.32, -0.65);
   cylinder(contact, 0.045, 0.045, 1.7, gold, -1.8, 2.18, -0.65);
   const shade = cylinder(contact, 0.12, 0.65, 0.64, orange, -1.8, 3.15, -0.65);
+  register(shade, "light", [0, 0, 0]);
   shade.rotation.z = 0.1;
   cylinder(contact, 0.54, 0.54, 0.025, lightMaterial, -1.8, 2.84, -0.65);
   const cup = cylinder(contact, 0.19, 0.16, 0.4, chalk, 1.7, 1.49, 0.3);
@@ -786,8 +937,26 @@ export async function createStudio(
   );
   handle.position.set(1.91, 1.52, 0.3);
   contact.add(handle);
-  box(contact, 1.3, 0.11, 0.9, blue, 0.8, 1.34, -0.75, 0.025);
-  box(contact, 1.25, 0.05, 0.86, chalk, 0.8, 1.42, -0.75, 0.015);
+  const resumeBook = group(contact, 0.8, 1.34, -0.75, "resume");
+  box(resumeBook, 1.3, 0.11, 0.9, blue, 0, 0, 0, 0.025);
+  box(resumeBook, 1.25, 0.05, 0.86, chalk, 0, 0.08, 0, 0.015);
+  const resumeLabel = face(
+    resumeBook,
+    labelTexture(["RÉSUMÉ"], {
+      width: 768,
+      height: 512,
+      size: 110,
+      bg: "#eeede3",
+      color: "#3659cb",
+      sub: "DEBAJYOTI MAITY",
+    }),
+    1.18,
+    0.78,
+    0,
+    0.109,
+    0,
+  );
+  resumeLabel.rotation.x = -Math.PI / 2;
   plaque(
     contact,
     "05 / SAY HELLO",
@@ -800,7 +969,7 @@ export async function createStudio(
   );
   plant(studio, 11.3, 0, 6.6, 1.2);
   plant(studio, -11.5, 0, 6, 1.1);
-  plant(studio, 1.2, 0, -6.6, 1);
+  plant(studio, -0.8, 0, -7, 0.75);
   // Freestanding slim lamp and low bench complete the inhabitable scale.
   box(studio, 3, 0.22, 1.1, orange, -4.1, 0.6, 6.9, 0.12);
   cylinder(studio, 0.055, 0.055, 0.55, dark, -5.15, 0.28, 6.9);
@@ -820,352 +989,48 @@ export async function createStudio(
     0.35,
   );
 
-  renderer.shadowMap.needsUpdate = true;
-  const viewPoints = [
-    { p: [26, 25, 31], t: [-4.7, 0.4, 2.4], m: [43, 46, 54], mt: [0, 1, 0] },
-    {
-      p: [-0.6, 8.8, 13.9],
-      t: [-10.4, 1.55, 2.5],
-      m: [4, 14, 21],
-      mt: [-8, 1.7, 1.2],
-    },
-    {
-      p: [18, 9.7, 13.7],
-      t: [5.3, 1.7, 2.5],
-      m: [19, 14, 23],
-      mt: [8, 1.9, 1],
-    },
-    { p: [19, 10, 3.3], t: [4.8, 2, -4.4], m: [22, 15, 9], mt: [7.6, 2, -5.5] },
-    {
-      p: [-1.2, 10, 6.4],
-      t: [-8.8, 1.4, -4.5],
-      m: [4, 15, 14],
-      mt: [-6.4, 1.8, -5.7],
-    },
-    {
-      p: [15, 8.2, 15],
-      t: [3.3, 1.25, 7.3],
-      m: [15, 12, 22],
-      mt: [6.2, 1.5, 6.4],
-    },
-  ];
-  const hotspotWorld = [V(-8, 4.2, 1), V(8.4, 4.8, 1.4), V(7.7, 5.2, -5.5)];
-  const hotspotElements = [...document.querySelectorAll(".hotspot")];
-  let progress = 0,
-    paused = reducedMotion,
-    night = false,
-    nightMix = 0,
-    exploded = false,
-    explosion = 0,
-    orbiting = false,
-    disposed = false,
-    suspended = false,
-    lost = false,
-    frame = 0,
-    clock = 0,
-    last = performance.now(),
-    dirty = true;
-  let pointerDown = null,
-    hasDragged = false,
-    hoverStop = null,
-    settle = 2,
-    shadowTick = 0;
-  const raycaster = new THREE.Raycaster(),
-    pointer = new THREE.Vector2(),
-    projected = V(),
-    desired = V(),
-    target = V();
-  const dayColor = new THREE.Color("#e9e9e2"),
-    nightColor = new THREE.Color("#18251f");
-  const dayGround = new THREE.Color("#c8cbb9"),
-    nightGround = new THREE.Color("#233d32");
-  function updateView(immediate = false) {
-    const a = Math.min(4, Math.floor(progress)),
-      b = a + 1,
-      f = smooth(progress - a);
-    const p1 = mobile() ? viewPoints[a].m : viewPoints[a].p,
-      p2 = mobile() ? viewPoints[b].m : viewPoints[b].p;
-    const t1 = mobile() ? viewPoints[a].mt : viewPoints[a].t,
-      t2 = mobile() ? viewPoints[b].mt : viewPoints[b].t;
-    desired.fromArray(p1).lerp(V(...p2), f);
-    target.fromArray(t1).lerp(V(...t2), f);
-    if (immediate) {
-      camera.position.copy(desired);
-      controls.target.copy(target);
-    }
-  }
-  function resize() {
-    camera.aspect = innerWidth / innerHeight;
-    camera.fov = mobile() ? 42 : 39;
-    camera.clearViewOffset();
-    if (mobile())
-      camera.setViewOffset(
-        innerWidth,
-        innerHeight,
-        0,
-        innerHeight * 0.145,
-        innerWidth,
-        innerHeight,
-      );
-    camera.updateProjectionMatrix();
-    renderer.setPixelRatio(Math.min(devicePixelRatio, mobile() ? 1.35 : 1.7));
-    renderer.setSize(innerWidth, innerHeight);
-    updateView(true);
-    controls.update();
-    invalidate();
-  }
-  function invalidate() {
-    dirty = true;
-    settle = reducedMotion ? 2 : 25;
-    if (!frame && !suspended && !disposed && !lost && !document.hidden)
-      frame = requestAnimationFrame(render);
-  }
-  function pick(event) {
-    pointer.set(
-      (event.clientX / innerWidth) * 2 - 1,
-      (-event.clientY / innerHeight) * 2 + 1,
-    );
-    raycaster.setFromCamera(pointer, camera);
-    const hit = raycaster.intersectObjects(interactive, true)[0];
-    if (!hit) return null;
-    let o = hit.object;
-    while (o && o.userData.stop === undefined) o = o.parent;
-    return o?.userData.stop ?? null;
-  }
-  function pointerStart(event) {
-    pointerDown = { x: event.clientX, y: event.clientY };
-    hasDragged = false;
-  }
-  function pointerMove(event) {
-    if (
-      pointerDown &&
-      Math.hypot(event.clientX - pointerDown.x, event.clientY - pointerDown.y) >
-        7
-    ) {
-      hasDragged = true;
-      if (!orbiting) {
-        orbiting = true;
-        onOrbit?.(true);
-      }
-    }
-    if (!pointerDown) {
-      hoverStop = pick(event);
-      canvas.style.cursor = hoverStop === null ? "grab" : "pointer";
-    }
-    invalidate();
-  }
-  function pointerEnd(event) {
-    if (pointerDown && !hasDragged) {
-      const stop = pick(event);
-      if (stop !== null) onNavigate?.(stop);
-    }
-    pointerDown = null;
-  }
-  function contextLost(event) {
-    event.preventDefault();
-    lost = true;
-    container.dataset.ready = "false";
-    if (frame) cancelAnimationFrame(frame);
-    frame = 0;
-    onFailure?.();
-  }
-  function contextRestored() {
-    lost = false;
-    const restoredEnvironment = new RoomEnvironment();
-    const restoredPmrem = new THREE.PMREMGenerator(renderer);
-    envTarget.dispose();
-    envTarget = restoredPmrem.fromScene(restoredEnvironment, 0.04, 0.1, 100);
-    scene.environment = envTarget.texture;
-    restoredEnvironment.dispose();
-    restoredPmrem.dispose();
-    renderer.shadowMap.needsUpdate = true;
-    onReady?.();
-    invalidate();
-  }
-  canvas.addEventListener("pointerdown", pointerStart);
-  canvas.addEventListener("pointermove", pointerMove);
-  canvas.addEventListener("pointerup", pointerEnd);
-  canvas.addEventListener("pointercancel", () => {
-    pointerDown = null;
-  });
-  canvas.addEventListener("webglcontextlost", contextLost);
-  canvas.addEventListener("webglcontextrestored", contextRestored);
-  controls.addEventListener("change", () => {
-    dirty = true;
-  });
-  function visibility() {
-    if (document.hidden) {
-      if (frame) cancelAnimationFrame(frame);
-      frame = 0;
-    } else {
-      last = performance.now();
-      invalidate();
-    }
-  }
-  document.addEventListener("visibilitychange", visibility);
-  window.addEventListener("resize", resize);
-  function render(now) {
-    frame = 0;
-    if (disposed || suspended || lost || document.hidden) return;
-    // Ambient movement needs 30 fps; pointer and scroll changes render immediately.
-    if (!dirty && !orbiting && !paused && now - last < 1000 / 30) {
-      frame = requestAnimationFrame(render);
-      return;
-    }
-    const dt = Math.min((now - last) / 1000, 0.05);
-    last = now;
-    if (!paused) clock += dt;
-    updateView();
-    if (!orbiting) {
-      const damping = reducedMotion ? 1 : 1 - Math.exp(-dt * 6);
-      camera.position.lerp(desired, damping);
-      controls.target.lerp(target, damping);
-    }
-    controls.update();
-    const targetNight = night ? 1 : 0;
-    nightMix = THREE.MathUtils.lerp(
-      nightMix,
-      targetNight,
-      reducedMotion ? 1 : 1 - Math.exp(-dt * 3),
-    );
-    scene.background.copy(dayColor).lerp(nightColor, nightMix);
-    scene.fog.color.copy(scene.background);
-    ground.material.color.copy(dayGround).lerp(nightGround, nightMix);
-    hemi.intensity = THREE.MathUtils.lerp(1.2, 0.55, nightMix);
-    sun.intensity = THREE.MathUtils.lerp(3.2, 0.5, nightMix);
-    fill.intensity = THREE.MathUtils.lerp(1.3, 1.5, nightMix);
-    warmLights.forEach((l) => (l.intensity = l.userData.power * nightMix));
-    lightMaterial.emissiveIntensity = 0.5 + nightMix * 2;
-    explosion = THREE.MathUtils.lerp(
-      explosion,
-      exploded ? 1 : 0,
-      reducedMotion ? 1 : 1 - Math.exp(-dt * 4),
-    );
-    layers.forEach(({ g, x, y, z, i }) => {
-      g.position.set(
-        x + explosion * (i - 1) * 0.65,
-        y +
-          explosion * i * 0.45 +
-          (paused ? 0 : Math.sin(clock * 0.6 + i) * 0.055),
-        z - explosion * i * 0.7,
-      );
-      g.rotation.y = explosion * (i - 1) * 0.16;
-    });
-    if (Math.abs(explosion - (exploded ? 1 : 0)) > 0.001)
-      renderer.shadowMap.needsUpdate = true;
-    if (!paused) {
-      animations.forEach((fn) => fn(clock));
-      if (++shadowTick % 15 === 0) renderer.shadowMap.needsUpdate = true;
-    }
-    hotspotElements.forEach((el, i) => {
-      projected.copy(hotspotWorld[i]).project(camera);
-      const x = (projected.x * 0.5 + 0.5) * innerWidth,
-        y = (-projected.y * 0.5 + 0.5) * innerHeight;
-      const visible =
-        progress < 0.25 &&
-        !orbiting &&
-        projected.z < 1 &&
-        x > innerWidth * (mobile() ? 0.08 : 0.35) &&
-        x < innerWidth * 0.95 &&
-        y > 120 &&
-        y < innerHeight * (mobile() ? 0.6 : 0.75);
-      el.style.left = x + "px";
-      el.style.top = y + "px";
-      el.classList.toggle("is-visible", visible);
-      el.tabIndex = visible ? 0 : -1;
-      el.setAttribute("aria-hidden", String(!visible));
-    });
-    renderer.render(scene, camera);
-    container.dataset.ready = "true";
-    dirty = false;
-    const moving =
-      (camera.position.distanceToSquared(desired) > 0.00005 && !orbiting) ||
-      Math.abs(nightMix - targetNight) > 0.001 ||
-      Math.abs(explosion - (exploded ? 1 : 0)) > 0.001;
-    if (!paused || moving || settle-- > 0)
-      frame = requestAnimationFrame(render);
-  }
-  resize();
-  updateView(true);
-  controls.update();
-  renderer.render(scene, camera);
-  container.dataset.ready = "true";
-  onReady?.();
-  invalidate();
-  return {
+  register(monument, "about", [0, 2.7, 0]);
+  register(health, "health", [0, 2.65, -0.5]);
+  register(angular, "angular", [0, 2.6, -0.4]);
+  register(systems, "healthcare", [-0.8, 1.8, 1.5]);
+  register(enterprise, "enterprise", [0, 2.7, -0.38]);
+  register(mobileWork, "mobile", [1, 1.8, -0.27]);
+  register(contact, "contact", [0.7, 1.4, 0.4]);
+  register(resumeBook, "resume", [0, 0.12, 0]);
+  return connectStudio({
+    container,
+    renderer,
+    scene,
+    camera,
+    controls,
+    ground,
+    hemi,
+    sun,
+    fill,
+    warmLights,
+    lightMaterial,
+    layers,
+    animations,
+    itemRoots,
+    itemAnchors,
     images: exhibitImages,
-    setProgress(value) {
-      progress = clamp(value, 0, 5);
-      if (orbiting) {
-        orbiting = false;
-        onOrbit?.(false);
-      }
-      invalidate();
-    },
-    reset() {
-      orbiting = false;
-      onOrbit?.(false);
-      invalidate();
-    },
-    setNight(value) {
-      night = value;
-      invalidate();
-    },
-    setExploded(value) {
-      exploded = value;
-      renderer.shadowMap.needsUpdate = true;
-      invalidate();
-    },
-    setPaused(value) {
-      paused = value;
-      last = performance.now();
-      invalidate();
-    },
-    setSuspended(value) {
-      suspended = value;
-      if (value) {
-        if (frame) cancelAnimationFrame(frame);
-        frame = 0;
-      } else {
-        last = performance.now();
-        invalidate();
-      }
-    },
-    getState() {
-      return {
-        progress,
-        orbiting,
-        paused,
-        night,
-        exploded,
-        renderCalls: renderer.info.render.calls,
-        triangles: renderer.info.render.triangles,
-        camera: camera.position.toArray(),
-      };
-    },
-    dispose() {
-      disposed = true;
-      if (frame) cancelAnimationFrame(frame);
-      window.removeEventListener("resize", resize);
-      document.removeEventListener("visibilitychange", visibility);
-      controls.dispose();
-      const geometries = new Set(),
-        materials = new Set();
-      scene.traverse((o) => {
-        if (o.geometry) geometries.add(o.geometry);
-        if (o.material)
-          (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) =>
-            materials.add(m),
-          );
-      });
-      geometries.forEach((g) => g.dispose());
-      materials.forEach((m) => {
-        m.map?.dispose();
-        m.dispose();
-      });
+    reducedMotion,
+    onSelect,
+    onHover,
+    onOrbit,
+    onReady,
+    onFailure,
+    restoreEnvironment() {
+      const room = new RoomEnvironment(),
+        generator = new THREE.PMREMGenerator(renderer);
       envTarget.dispose();
-      renderer.dispose();
-      canvas.remove();
+      envTarget = generator.fromScene(room, 0.04, 0.1, 100);
+      scene.environment = envTarget.texture;
+      room.dispose();
+      generator.dispose();
     },
-  };
+    disposeEnvironment() {
+      envTarget.dispose();
+    },
+  });
 }
