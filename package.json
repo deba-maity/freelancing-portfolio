@@ -1,0 +1,23 @@
+{
+  "name": "debajyoti-dimension",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "check": "node --check src/main.js && node --check src/scene.js",
+    "resume": "node scripts/build-resume.mjs",
+    "test": "playwright test",
+    "test:a11y": "node scripts/check-accessibility.mjs"
+  },
+  "dependencies": {
+    "three": "^0.183.0"
+  },
+  "devDependencies": {
+    "vite": "^7.3.1",
+    "@playwright/test": "^1.58.2",
+    "@axe-core/playwright": "^4.14.0"
+  }
+}

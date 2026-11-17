@@ -1,0 +1,156 @@
+/* Small material and interaction details shared across the composition. */
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  margin: 30px 0 0 49px;
+  pointer-events: auto;
+}
+.hero-lab-link {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 11px;
+  padding: 10px 0;
+  border-bottom: 1px solid #595e4d;
+  color: #b7bfa6;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+  white-space: nowrap;
+}
+.hero-lab-link > span {
+  font-size: 17px;
+  color: var(--accent);
+}
+.hero-lab-link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+@media (min-width: 1600px) {
+  .hero-actions {
+    margin-top: 38px;
+  }
+}
+@media (max-width: 760px) {
+  .hero-actions {
+    margin: 24px 0 0 36px;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .hero-actions > .button {
+    gap: 20px;
+  }
+  .hero-lab-link {
+    font-size: 10px;
+    gap: 7px;
+  }
+}
+.mock-window {
+  transform: rotateX(calc(10deg + var(--rotate-x, 0deg)))
+    rotateY(calc(-18deg + var(--rotate-y, 0deg))) rotateZ(-8deg)
+    translate3d(var(--tilt-x, 0px), var(--tilt-y, 0px), 0);
+}
+.angular-block {
+  filter: none;
+  transform: rotateX(calc(-15deg + var(--rotate-x, 0deg)))
+    rotateY(calc(-25deg + var(--rotate-y, 0deg))) rotateZ(-9deg)
+    translate3d(var(--tilt-x, 0px), var(--tilt-y, 0px), 0);
+}
+.block-front {
+  box-shadow: 18px 29px 34px #422a5e28;
+}
+.block-left {
+  left: 100%;
+  top: 0;
+  transform-origin: 0 50%;
+  transform: rotateY(90deg) translateX(-38px);
+  border-radius: 2px;
+}
+.block-top {
+  left: 0;
+  top: 0;
+  width: 100%;
+  transform-origin: 50% 0;
+  transform: rotateX(90deg) translateY(-38px);
+  border-radius: 2px;
+}
+.project-visual::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: radial-gradient(
+    ellipse at var(--shine-x, 50%) var(--shine-y, 50%),
+    #ffffff29,
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+}
+.project-visual:hover::before {
+  opacity: 1;
+}
+.project-category {
+  font-size: 9px;
+}
+.visual-note {
+  font-size: 7px;
+  opacity: 0.8;
+}
+.hero-intro {
+  color: #b9bcae;
+}
+.hero-footnote a:hover {
+  color: var(--accent);
+}
+.contact-details button:hover {
+  color: #1c2a13;
+}
+.scene-container canvas {
+  opacity: 0;
+  transition: opacity 0.7s;
+}
+.scene-container.webgl-ready canvas {
+  opacity: 1;
+}
+.lab-stage .scene-container canvas {
+  transition: none;
+}
+.lab-stage-actions button:hover {
+  color: var(--accent);
+  border-color: #aa7048;
+}
+.layer-tabs button:focus-visible {
+  outline-offset: 2px;
+}
+@media (max-width: 760px) {
+  .project-category {
+    font-size: 8px;
+  }
+  .visual-note {
+    font-size: 6px;
+  }
+  .lab-stage-actions {
+    gap: 5px;
+  }
+  .lab-stage-actions button {
+    padding: 8px 6px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mock-window {
+    transform: rotateX(10deg) rotateY(-18deg) rotateZ(-8deg);
+  }
+  .angular-block {
+    transform: rotateX(-15deg) rotateY(-25deg) rotateZ(-9deg);
+  }
+  .scene-container canvas {
+    transition: none;
+  }
+  .project-visual::before {
+    display: none;
+  }
+}

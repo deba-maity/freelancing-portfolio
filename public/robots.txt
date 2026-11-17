@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://debajyoti-maity-dimension.stonymoth6.chatgpt.site/sitemap.xml
