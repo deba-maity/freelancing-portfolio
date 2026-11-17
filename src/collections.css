@@ -140,6 +140,7 @@
   color: #f1bf9d;
 }
 .has-panel .chapter-copy,
+.has-panel .header-actions,
 .has-panel .tour-footer,
 .has-panel .scene-caption,
 .has-panel .world-controls,
@@ -209,8 +210,8 @@
   float: none;
   flex: none;
   margin: 0;
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   font-size: 13px;
 }
 #dialog-body {
@@ -1069,8 +1070,8 @@ body[data-area="personal"]:not(.graphics-unavailable) #exhibit-action {
     font-size: 10px;
   }
   .close-dialog {
-    width: 30px;
-    height: 30px;
+    width: 44px;
+    height: 44px;
   }
   #dialog-body {
     padding: 27px 23px 35px;
